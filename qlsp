@@ -1,0 +1,126 @@
+create table sanpham(
+id int primary key,
+tensp nvarchar(50),
+gia int,
+madein nvarchar(50))
+
+create table khachhang(
+idkhachhang int primary key,
+hoten nvarchar(50),
+diachi nvarchar(50))
+
+create table hoadon(
+id int primary key,
+ngay date,
+tonggia int,
+idkhachhang int,
+foreign key (idkhachhang) references khachhang(idkhachhang))
+
+create table hoadonchitiet(
+idhoadonchitiet int primary key,
+idsanpham int,
+idhoadon int,
+foreign key (idsanpham) references sanpham(id),
+foreign key (idhoadon)  references hoadon(id))
+alter table hoadonchitiet
+add soluong int;
+-- 6
+select id,tonggia 
+from hoadon
+where ngay between '2006-06-17' and '2006-06-21'
+-- 7
+select id,tonggia
+from hoadon
+where ngay between '2006-06-01' and '2006-06-30'
+order by tonggia asc
+-- 8
+select id,tonggia
+from hoadon
+where ngay between '2006-06-01' and '2006-06-30'
+order by ngay desc
+-- 9
+select khachhang.idkhachhang,hoten
+from khachhang
+inner join hoadon on hoadon.idkhachhang=khachhang.idkhachhang
+where hoadon.ngay='2006-06-19'
+-- 10
+select sanpham.id,tensp
+from sanpham
+inner join hoadonchitiet on sanpham.id=hoadonchitiet.idsanpham
+inner join hoadon on hoadonchitiet.idhoadon=hoadon.id
+inner join khachhang on hoadon.idkhachhang=khachhang.idkhachhang
+where ngay='2006-06-19' and khachhang.hoten='Le thi hai'
+-- 11
+select hoadon.id
+from hoadon 
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+inner join sanpham on hoadonchitiet.idsanpham=sanpham.id
+where sanpham.tensp='bimbim' or sanpham.tensp='suachua'
+-- 12
+select hoadon.id
+from hoadon 
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+inner join sanpham on hoadonchitiet.idsanpham=sanpham.id
+where (sanpham.tensp='bimbim' or sanpham.tensp='suachua') and hoadonchitiet.soluong between 10 and 20
+-- 13
+select hoadon.id
+from hoadon 
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+inner join sanpham on hoadonchitiet.idsanpham=sanpham.id
+where (sanpham.tensp='bimbim' and sanpham.tensp='mitom') and hoadonchitiet.soluong between 10 and 20
+-- 15
+select sanpham.id,tensp
+from sanpham
+inner join hoadonchitiet on hoadonchitiet.idsanpham=sanpham.id
+where hoadonchitiet.soluong=0
+-- 16
+select sanpham.id,tensp
+from sanpham
+inner join hoadonchitiet on hoadonchitiet.idsanpham=sanpham.id
+inner join hoadon on hoadonchitiet.idhoadon=hoadon.id
+where hoadonchitiet.soluong=0 and hoadon.ngay between '2006-01-01' and '2006-12-30'
+-- 17
+select sanpham.id ,tensp
+from sanpham
+inner join hoadonchitiet on hoadonchitiet.idsanpham=sanpham.id
+inner join hoadon on hoadonchitiet.idhoadon=hoadon.id
+where hoadon.ngay between '2006-01-01' and '2006-12-30' and sanpham.gia > 8000
+-- 18
+select hoadon.id
+from hoadon
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+inner join sanpham on hoadonchitiet.idsanpham=sanpham.id
+where sanpham.gia>8000
+-- 19
+select hoadon.id
+from hoadon
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+inner join sanpham on hoadonchitiet.idsanpham=sanpham.id
+where sanpham.gia<9000 and hoadon.ngay between '2006-01-01' and '2006-12-30'
+-- 21
+select count(distinct sanpham.id)as soluongSP
+from sanpham 
+inner join hoadonchitiet on sanpham.id=hoadonchitiet.idsanpham
+inner join hoadon on hoadonchitiet.idhoadon=hoadon.id
+where (hoadon.ngay between '2006-01-01' and '2006-12-30' )and  hoadonchitiet.soluong >0
+-- 22
+select min(hoadon.tonggia)as giatrimin,max(hoadon.tonggia) as giatrimax
+from hoadon
+-- 23
+select avg(hoadon.tonggia)as giatriTB
+from hoadon
+inner join hoadonchitiet on hoadonchitiet.idhoadon=hoadon.id
+where (hoadon.ngay between '2006-01-01' and '2006-12-30' )and  hoadonchitiet.soluong >0
+-- 24
+select sum(hoadon.tonggia) as doanhthu
+from hoadon
+where (hoadon.ngay between '2006-01-01' and '2006-12-30' )
+-- 25
+select hoadon.id
+from hoadon
+where hoadon.tonggia=(select max(tonggia) from hoadon) and hoadon.ngay between '2006-01-01' and '2006-12-30'
+-- 26
+select hoten
+from khachhang
+inner join hoadon on khachhang.idkhachhang=hoadon.idkhachhang
+where hoadon.tonggia=(select max(tonggia) from hoadon) and hoadon.ngay between '2006-01-01' and '2006-12-30'
