@@ -1,0 +1,10 @@
+Product/Product.java
+ Product.Product
+Product_Java/ServletProduct_ShowEdit.java
+ Product_Java.ServletProduct_ShowEdit
+Product_Java/ServletProduct_Add.java
+ Product_Java.ServletProduct_Add
+Product_Java/ServletProduct_Remove.java
+ Product_Java.ServletProduct_Remove
+Product_Java/ServletProduct_Edit.java
+ Product_Java.ServletProduct_Edit
